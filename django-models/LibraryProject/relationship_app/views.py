@@ -6,13 +6,13 @@ from .models import Book
 from django.http import HttpResponse
 from django.views.generic.detail import DetailView
 
-def list_all_books(request):
+def list_books(request):
     books_list = Book.objects.all()              #Fetchin all book instances
     context = {"book_list": books_list}
     return render(request, "relationship_app/list_books.html", context)
 
 
-class BookDetailView(DetailView):
+class LibraryDetailView(DetailView):
     """Displays all the books available"""
     model = Library
     template_name = 'relationship_app/library_detail.html'
