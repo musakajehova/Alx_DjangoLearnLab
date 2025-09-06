@@ -4,7 +4,7 @@ from .models import Book
 
 # Create your views here.
 from django.http import HttpResponse
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView
 
 def list_all_books(request):
     books_list = Book.objects.all()              #Fetchin all book instances
