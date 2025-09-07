@@ -1,6 +1,15 @@
 from django.db import models
 
 # Create your models here.
+from django.contrib.auth.models import User
+
+######################################################################################
+
+#####################################################################################
+
+
+
+
 class Author(models.Model):
     name = models.CharField(max_length=200)
     
@@ -27,3 +36,20 @@ class Librarian(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.library}"
+
+############################################################################    
+#Testing this out 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    pass
+
+class Task(models.Model):
+    pass
+##########################################################################
+
+###########################################################################
+#Trying chat code for Task 2
+
+
+############################################################################
