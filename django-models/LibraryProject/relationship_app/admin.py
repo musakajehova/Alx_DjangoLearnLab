@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Author, Book, Library, Librarian
+from .models import Author, Book, Library, Librarian, UserProfile, Task
 
 """class bookAdmin(admin.ModelAdmin):
     list_display =  ('title', 'author', 'publication_year')
@@ -13,3 +13,5 @@ admin.site.register(Author)
 admin.site.register(Book)
 admin.site.register(Library)
 admin.site.register(Librarian)
+admin.site.register(Task)
+admin.site.register(UserProfile)

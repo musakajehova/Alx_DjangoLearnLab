@@ -54,7 +54,7 @@ def is_member(user):
 
 
 @user_passes_test(is_admin)
-def Admin(request):
+def admin_view(request):
     return render(request, "admin_view.html", {"role": "Admin"})
 
 
