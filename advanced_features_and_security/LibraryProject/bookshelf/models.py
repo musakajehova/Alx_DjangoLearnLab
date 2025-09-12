@@ -14,11 +14,11 @@ class Book(models.Model):
         return f"Title: {self.title} Author: {self.author} Pub year: {self.publication_year}"
 
 
-class MyUser(AbstractUser):
+class CustomUser(AbstractUser):
     date_of_birth = models.DateField
     profile_photo = models.ImageField()
 
-class MyUserManager(BaseUserManager):
+class CustomUserManager(BaseUserManager):
     def create_user(self, email, date_of_birth, password=None):
         if not email:
             raise ValueError("Users must have an email address")

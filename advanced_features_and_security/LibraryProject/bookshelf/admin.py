@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Book, MyUser
+from .models import Book, CustomUser
 
 ################################################################################
 from django.contrib.auth.admin import UserAdmin
@@ -15,4 +15,4 @@ class bookAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, bookAdmin)
 
-admin.site.register(MyUser, UserAdmin)
+admin.site.register(CustomUser, UserAdmin)
