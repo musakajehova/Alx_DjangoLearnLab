@@ -54,7 +54,7 @@ MIDDLEWARE = [
 ]
 
 ##############################################################
-AUTH_USER_MODEL = "bookshelf.CustomUser"
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 ##############################################################
 
 ROOT_URLCONF = 'LibraryProject.urls'

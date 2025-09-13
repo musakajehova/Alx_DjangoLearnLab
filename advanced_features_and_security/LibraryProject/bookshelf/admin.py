@@ -13,7 +13,7 @@ class bookAdmin(admin.ModelAdmin):
     list_filter = ('title', 'author', 'publication_year')
 
 
-class MyUserAdmin(admin.ModelAdmin):
+class CustomUserAdmin(admin.ModelAdmin):
     model = CustomUser
     list_display = ('email', 'date_of_birth', 'is_staff', 'is_superuser')
     list_filter = ('is_staff', 'is_superuser', 'date_of_birth')

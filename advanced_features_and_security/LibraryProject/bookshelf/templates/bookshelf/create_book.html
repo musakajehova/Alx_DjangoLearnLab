@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Book</title>
+</head>
+<body>
+    <h1>Add a New Book</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            Title: <input type="text" name="title">
+        </p>
+        <p>
+            Author: <input type="text" name="author">
+        </p>
+        <p>
+            Publication Year: <input type="number" name="publication_year">
+        </p>
+        <button type="submit">Create</button>
+    </form>
+
+    <p><a href="{% url 'book_list' %}">Back to Book List</a></p>
+</body>
+</html>
