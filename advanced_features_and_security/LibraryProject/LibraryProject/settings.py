@@ -29,12 +29,22 @@ SECRET_KEY = 'django-insecure-fdw@-)3$e))re0jwva9s880&ra=y#5agfan-5&xxaq_99oe@q=
 DEBUG = False #remember this was originaly set to True
 
 ##############################################################################################
-SECURE_BROWSER_XSS_FILTER = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_CONTENT_TYPE_NOSNIFF = True
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+"""Configure Django for HTTPS Support"""
+SECURE_SSL_REDIRECT = True              #redirect all non-HTTPS requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000          #instruct browsers to only access the site via HTTPS for the specified time
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True   # include all subdomains in the HSTS policy and to allow preloading
+SECURE_HSTS_PRELOAD = True              # include all subdomains in the HSTS policy and to allow preloading
+
+"""Enforce Secure Cookies"""
+CSRF_COOKIE_SECURE = True       #ensure session cookies are only transmitted over HTTPS
+SESSION_COOKIE_SECURE = True    #ensure CSRF cookies are only transmitted over HTTPS
+
+
+"""Implement Secure Headers"""
+SECURE_BROWSER_XSS_FILTER = True    #prevent your site from being framed and protect against clickjacking
+X_FRAME_OPTIONS = 'DENY'            #prevent browsers from MIME-sniffing a response away from the declared content-type
+SECURE_CONTENT_TYPE_NOSNIFF = True  #enable the browser’s XSS filtering and help prevent cross-site scripting attacks
 
 ##############################################################################################
 
