@@ -45,6 +45,7 @@ SESSION_COOKIE_SECURE = True    #ensure CSRF cookies are only transmitted over H
 SECURE_BROWSER_XSS_FILTER = True    #prevent your site from being framed and protect against clickjacking
 X_FRAME_OPTIONS = 'DENY'            #prevent browsers from MIME-sniffing a response away from the declared content-type
 SECURE_CONTENT_TYPE_NOSNIFF = True  #enable the browser’s XSS filtering and help prevent cross-site scripting attacks
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 ##############################################################################################
 
