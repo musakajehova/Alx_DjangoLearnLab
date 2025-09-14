@@ -4,8 +4,9 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import permission_required
-from .models import Book, CustomUser
-from django.http import HttpRequest
+from .models import Book
+from .forms import ExampleForm
+#from django.http import HttpRequest
 
 
 @permission_required('bookshelf.can_view', raise_exception=True)
@@ -50,3 +51,13 @@ def can_delete(request, pk):
         book.delete()
         return redirect('book_list')
     return render(request, 'bookshelf/delete_book.html', {'book': book})
+
+def Example_add_book(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect('Book_list')
+    else:
+        form = ExampleForm(instance=form)
+    return render(request, "bookshelf/form_example.html", {"form": form})
