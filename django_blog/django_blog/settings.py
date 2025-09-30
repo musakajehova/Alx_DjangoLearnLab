@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+###############################################################
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+###############################################################
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9oiv%*3wv%@l_7i728bh%^w4=&_ico73hno0mb2289)z#=&(-u'
+SECRET_KEY = os.getenv('DJANGO_SECURITY_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,6 +37,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #############################################################
+    'blog.apps.BlogConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_filters',
+    #############################################################
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,7 +66,7 @@ ROOT_URLCONF = 'django_blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Specify the templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,7 +128,30 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+##########################################################################
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+##########################################################################
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+##############################################################################
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAdminUser',
+    ],
+
+}
+##############################################################################

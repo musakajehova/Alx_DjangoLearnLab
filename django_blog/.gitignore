@@ -29,7 +29,7 @@ Thumbs.db
 *.log 
 
 # Static and media files
-/static/
+#/static/
 /media/
 
 # Coverage Reports
