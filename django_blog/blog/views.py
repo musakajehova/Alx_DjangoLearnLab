@@ -56,35 +56,35 @@ def post_list(request):
     return render(request, "blog/post_list.html")
 
 
+# 1. List posts
 class PostListView(ListView):
     model = Post
     template_name = "blog/post_list.html"
     context_object_name = "posts"
-    #ordering = ['-created_at']  # newest first
+    ordering = ['-id']  # newest first
 
-
-# 2. View details of a post (public)
+# 2. Detail view
 class PostDetailView(DetailView):
     model = Post
     template_name = "blog/post_detail.html"
 
-
-# 3. Create a new post (only for logged-in users)
+# 3. Create view
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content']   # we don’t include author, we set it in form_valid
+    fields = ['title', 'content']
     template_name = "blog/post_form.html"
+    success_url = reverse_lazy("post_list")
 
     def form_valid(self, form):
-        form.instance.author = self.request.user  # assign logged in user as author
+        form.instance.author = self.request.user
         return super().form_valid(form)
 
-
-# 4. Update a post (only the author can edit)
+# 4. Update view
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'content']
     template_name = "blog/post_form.html"
+    success_url = reverse_lazy("post_list")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -94,12 +94,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post = self.get_object()
         return self.request.user == post.author
 
-
-# 5. Delete a post (only the author can delete)
+# 5. Delete view
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = "blog/post_confirm_delete.html"
-    success_url = reverse_lazy('post-list')  # redirect after deletion
+    success_url = reverse_lazy('post_list')
 
     def test_func(self):
         post = self.get_object()
