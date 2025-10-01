@@ -20,16 +20,16 @@ def register(request):
             messages.error(request, "Please correct the errors below.")
     else:
         form = CustomUserCreationForm()
-    return render(request, "registration/register.html", {"form": form})
+    return render(request, "blog/register.html", {"form": form})
 
 
 # Use Django's LoginView and LogoutView (simple subclassing optional)
 class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
+    template_name = 'blog/login.html'
 
 
 class CustomLogoutView(LogoutView):
-    template_name = 'registration/logged_out.html'
+    template_name = 'blog/logged_out.html'
 
 
 # Profile view — user must be logged in
