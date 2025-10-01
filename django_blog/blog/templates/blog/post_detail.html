@@ -1,13 +1,45 @@
 {% extends "blog/base.html" %}
 {% block title %}{{ post.title }}{% endblock %}
+
 {% block content %}
 <h2>{{ post.title }}</h2>
 <p>{{ post.content }}</p>
-<p><small>By {{ post.author.username }} on {{ post.published_date }}</small></p>
+<p><small>By {{ post.author.username }} on {{ post.created_at }}</small></p>
 
-{% if user == post.author %}
-    <a href="{% url 'post_update' post.pk %}">Edit</a> |
-    <a href="{% url 'post_delete' post.pk %}">Delete</a>
+{% if user.is_authenticated and user == post.author %}
+  <a href="{% url 'post_update' post.pk %}">Edit</a> |
+  <a href="{% url 'post_delete' post.pk %}">Delete</a>
 {% endif %}
-<a href="{% url 'post_list' %}">Back to Posts</a>
+
+<hr>
+
+<h3>Comments</h3>
+
+{% for comment in comments %}
+  <div class="comment">
+    <p>{{ comment.content|linebreaksbr }}</p>
+    <p><small>By {{ comment.author.username }} on {{ comment.created_at }}</small></p>
+
+    {% if user.is_authenticated and user == comment.author %}
+      <a href="{% url 'comment_update' comment.pk %}">Edit</a> |
+      <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+    {% endif %}
+  </div>
+  <hr>
+{% empty %}
+  <p>No comments yet. Be the first to comment!</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+  <h4>Add a comment</h4>
+  <form action="{% url 'comment_create' post.pk %}" method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Post comment</button>
+  </form>
+{% else %}
+  <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+{% endif %}
+
+<p><a href="{% url 'post_list' %}">← Back to posts</a></p>
 {% endblock %}
