@@ -9,3 +9,18 @@
 </form>
 <a href="{% url 'post_list' %}">Cancel</a>
 {% endblock %}
+
+
+<!-- 
+{% extends "blog/base.html" %}
+{% block content %}
+  <h2>{% if object %}Edit Post{% else %}New Post{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.title.label_tag }} {{ form.title }}
+    {{ form.content.label_tag }} {{ form.content }}
+    {{ form.tags_input.label_tag }} {{ form.tags_input }}
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}
+-->

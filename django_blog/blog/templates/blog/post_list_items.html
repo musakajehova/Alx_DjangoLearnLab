@@ -1,0 +1,15 @@
+{# blog/templates/blog/post_list_items.html #}
+{% for post in posts %}
+  <article>
+    <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+    <p>{{ post.content|truncatewords:25 }}</p>
+    <p><small>By {{ post.author.username }} on {{ post.created_at }}</small></p>
+    {% if user == post.author %}
+      <a href="{% url 'post_update' post.pk %}">Edit</a> |
+      <a href="{% url 'post_delete' post.pk %}">Delete</a>
+    {% endif %}
+  </article>
+  <hr>
+{% empty %}
+  <p>No posts yet.</p>
+{% endfor %}

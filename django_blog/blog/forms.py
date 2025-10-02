@@ -17,6 +17,12 @@ class ProfileForm(forms.ModelForm):
         fields = ("first_name", "last_name", "email")
 
 class PostForm(forms.ModelForm):
+    tags_input = forms.CharField(
+        required=False,
+        help_text="Add tags separated by commas (e.g. django,python)",
+        widget=forms.TextInput(attrs={'placeholder': 'tag1, tag2, tag3'})
+    )
+    
     class Meta:
         model = Post
         fields = ["title", "content"]

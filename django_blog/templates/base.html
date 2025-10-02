@@ -16,6 +16,11 @@
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
             </ul>
+
+            <form action="{% url 'search_posts' %}" method="get" style="display:inline;">
+                <input name="q" type="text" placeholder="Search posts..." value="{{ request.GET.q|default:'' }}">
+                <button type="submit">Search</button>
+            </form>
         </nav>
     </header>
 
