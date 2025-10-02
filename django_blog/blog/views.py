@@ -6,12 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import CustomUserCreationForm, ProfileForm, PostForm, CommentForm
-from .models import Post, Comment, Tag
+from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from taggit.models import Tag
 from django.db.models import Q
 
 def home(request):
@@ -88,19 +89,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("post_list")
 
     def form_valid(self, form):
-    # set author and save post first
         form.instance.author = self.request.user
-        response = super().form_valid(form)  # saves self.object
-        # handle tags_input
-        tags_input = form.cleaned_data.get('tags_input', '')
-        if tags_input:
-            tag_names = [t.strip() for t in tags_input.split(',') if t.strip()]
-            tags = []
-            for name in tag_names:
-                tag_obj, created = Tag.objects.get_or_create(name=name)
-                tags.append(tag_obj)
-            self.object.tags.set(tags)
-        return response
+        return super().form_valid(form)
 
 # 4. Update view
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -109,26 +99,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "blog/post_form.html"
     success_url = reverse_lazy("post_list")
 
-    def get_initial(self):
-        initial = super().get_initial()
-        # set the tags_input initial value from existing tags
-        tags_qs = self.get_object().tags.all()
-        initial['tags_input'] = ', '.join([t.name for t in tags_qs])
-        return initial
-
     def form_valid(self, form):
-        response = super().form_valid(form)  # saves self.object
-        tags_input = form.cleaned_data.get('tags_input', '')
-        if tags_input:
-            tag_names = [t.strip() for t in tags_input.split(',') if t.strip()]
-            tags = []
-            for name in tag_names:
-                tag_obj, created = Tag.objects.get_or_create(name=name)
-                tags.append(tag_obj)
-            self.object.tags.set(tags)
-        else:
-            self.object.tags.clear()
-        return response
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
     def test_func(self):
         post = self.get_object()
@@ -190,30 +163,20 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == comment.author
     
 ####################################################################################
+def posts_by_tag(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = Post.objects.filter(tags__in=[tag])
+    return render(request, "blog/posts_by_tag.html", {"tag": tag, "posts": posts})
 
-# posts by tag
-class PostsByTagListView(ListView):
-    model = Post
-    template_name = "blog/posts_by_tag.html"
-    context_object_name = "posts"
-
-    def get_queryset(self):
-        tag_name = self.kwargs.get('tag_name')
-        return Post.objects.filter(tags__name__iexact=tag_name).distinct().order_by('-created_at')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tag_name'] = self.kwargs.get('tag_name')
-        return context
-
-# search
 def search_posts(request):
-    q = request.GET.get('q', '').strip()
-    posts = Post.objects.none()
-    if q:
-        posts = Post.objects.filter(
-            Q(title__icontains=q) |
-            Q(content__icontains=q) |
-            Q(tags__name__icontains=q)
-        ).distinct().order_by('-created_at')
-    return render(request, "blog/search_results.html", {"posts": posts, "query": q})
+    query = request.GET.get("q")
+    posts = Post.objects.all()
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)   
+        ).distinct()
+
+    return render(request, "blog/search_results.html", {"posts": posts, "query": query})
