@@ -12,6 +12,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     # explicitly include password as CharField for checker
+    password = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     class Meta:
