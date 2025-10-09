@@ -8,6 +8,7 @@ from .models import CustomUser
 from .serializers import CustomUserSerializer
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
+from rest_framework. authentication import TokenAuthentication
 
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -25,4 +26,5 @@ class LoginView(generics.GenericAPIView):
     
 class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = CustomUser
+    serializer_class = CustomUserSerializer
+    authentication_classes = [TokenAuthentication]
