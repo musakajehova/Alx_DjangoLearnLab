@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     ###############################################
     'accounts.apps.AccountsConfig',
+    'posts.apps.PostsConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'taggit',
