@@ -9,6 +9,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers', 'following']
+    
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     # explicitly include password as CharField for checker
@@ -29,4 +31,26 @@ class RegisterSerializer(serializers.ModelSerializer):
         # create token for new user
         Token.objects.create(user=user)
         return user
+################################################################################################
+class UserSerializer(serializers.ModelSerializer):
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
 
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'email', 'bio', 'profile_picture',
+            'followers_count', 'following_count'
+        ]
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()
+
+    def get_following_count(self, obj):
+        return obj.following.count()
+
+
+class FollowActionSerializer(serializers.Serializer):
+    # This is a very small serializer just to satisfy request validation if you want body
+    target_user_id = serializers.IntegerField()
+################################################################################################
