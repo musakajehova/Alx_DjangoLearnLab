@@ -10,7 +10,10 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework. authentication import TokenAuthentication
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-
+#############################################################################################################
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
+############################################################################################################
 User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
@@ -52,7 +55,18 @@ class FollowUserView(APIView):
             return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         # add to following relationship
         request.user.following.add(target)
+        #####################################################################################################
+        Notification.objects.create(
+            recipient=target,
+            actor=request.user,
+            verb='started following you',
+            target_content_type=None, 
+            target_object_id=None,
+        )
+        ###################################################################################################
         return Response({"detail": f"You are now following {target.username}."}, status=status.HTTP_200_OK)
+        
+
 
 
 class UnfollowUserView(APIView):
