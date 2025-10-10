@@ -1,13 +1,12 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets, generics, status, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .models import CustomUser
 from .serializers import CustomUserSerializer, RegisterSerializer, UserSerializer, FollowActionSerializer
 from django.contrib.auth import authenticate, get_user_model
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework. authentication import TokenAuthentication
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -29,7 +28,7 @@ class LoginView(generics.GenericAPIView):
         return Response({"error": "Invalid credentials"}, status=400)
     
 class ProfileView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CustomUserSerializer
     authentication_classes = [TokenAuthentication]
 #############################################################################################
@@ -40,12 +39,12 @@ class ProfileView(generics.RetrieveAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
     lookup_field = 'username'
 
 
 class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         target = get_object_or_404(User, id=user_id)
@@ -57,7 +56,7 @@ class FollowUserView(APIView):
 
 
 class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         target = get_object_or_404(User, id=user_id)
