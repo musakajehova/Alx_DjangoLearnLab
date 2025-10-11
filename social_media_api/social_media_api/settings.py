@@ -27,7 +27,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECURITY_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+##############################################################################################
+
+"""Configure Django for HTTPS Support"""
+SECURE_SSL_REDIRECT = True              #redirect all non-HTTPS requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000          #instruct browsers to only access the site via HTTPS for the specified time
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True   # include all subdomains in the HSTS policy and to allow preloading
+SECURE_HSTS_PRELOAD = True              # include all subdomains in the HSTS policy and to allow preloading
+
+"""Enforce Secure Cookies"""
+CSRF_COOKIE_SECURE = True       #ensure session cookies are only transmitted over HTTPS
+SESSION_COOKIE_SECURE = True    #ensure CSRF cookies are only transmitted over HTTPS
+
+
+"""Implement Secure Headers"""
+SECURE_BROWSER_XSS_FILTER = True    #prevent your site from being framed and protect against clickjacking
+X_FRAME_OPTIONS = 'DENY'            #prevent browsers from MIME-sniffing a response away from the declared content-type
+SECURE_CONTENT_TYPE_NOSNIFF = True  #enable the browser’s XSS filtering and help prevent cross-site scripting attacks
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+##############################################################################################
+
 
 ALLOWED_HOSTS = []
 
@@ -60,6 +82,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#############################################################CPS
+"""                         CPS policies                        """
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+CSP_SCRIPT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'", 'data:')
+###############################################################
 
 ROOT_URLCONF = 'social_media_api.urls'
 
